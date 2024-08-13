@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Auth;
+namespace App\Http\Controllers\Admin\Auth;
 
 use App\Http\Controllers\Controller;
-use App\Models\User;
+use App\Models\Admin;
 use App\Providers\RouteServiceProvider;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\RedirectResponse;
@@ -14,14 +14,14 @@ use Illuminate\Validation\Rules;
 use Inertia\Inertia;
 use Inertia\Response;
 
-class RegisteredUserController extends Controller
+class RegisteredAdminController extends Controller
 {
     /**
      * Display the registration view.
      */
     public function create(): Response
     {
-        return Inertia::render('Auth/Register');
+        return Inertia::render('Admin/AdminRegister');
     }
 
     /**
@@ -33,20 +33,20 @@ class RegisteredUserController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:'.User::class,
+            'email' => 'required|string|email|max:255|unique:'.Admin::class,
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        $user = User::create([
+        $Admin = Admin::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
 
-        event(new Registered($user));
+        event(new Registered($Admin));
 
-        Auth::login($user);
+        Auth::guard('admin')->login($Admin);
 
-        return redirect(RouteServiceProvider::HOME);
+        return redirect(RouteServiceProvider::ADMIN_DASHBOARD);
     }
 }

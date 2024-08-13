@@ -18,5 +18,7 @@ export default function Dashboard(props) {
                 </div>
             </div>
         </AuthenticatedLayout>
+
+        
     );
 }

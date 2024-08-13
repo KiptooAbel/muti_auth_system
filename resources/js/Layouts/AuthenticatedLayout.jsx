@@ -3,10 +3,42 @@ import ApplicationLogo from '@/Components/ApplicationLogo';
 import Dropdown from '@/Components/Dropdown';
 import NavLink from '@/Components/NavLink';
 import ResponsiveNavLink from '@/Components/ResponsiveNavLink';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 
 export default function Authenticated({ auth, header, children }) {
     const [showingNavigationDropdown, setShowingNavigationDropdown] = useState(false);
+    const { component } = usePage(); // Access the current component name.
+
+    const getProfileRoute = () => {
+        switch (component) {
+            case 'Admin/AdminDashboard':
+                return route('admin.profile.edit');
+                case 'Dashboard':
+                    return route('profile.edit');                
+            case 'StudentDashboard':
+                return route('student.profile.edit');
+            case 'Lecturer/LecturerDashboard':
+                return route('lecturer.profile.edit');
+            case 'Accountant/AccountantDashboard':
+                return route('accountant.profile.edit');
+
+        }
+    };
+
+    const getLogoutRoute = () => {
+        switch (component) {
+            case 'Admin/AdminDashboard':
+                return route('admin.logout');
+                case 'Dashboard':
+                    return route('logout');                
+            case 'Student/StudentDashboard':
+                return route('student.logout');
+            case 'Lecturer/LecturerDashboard':
+                return route('lecturer.logout');
+            case 'Accountant/AccountantDashboard':
+                return route('accountant.logout');
+        }
+    };
 
     return (
         <div className="min-h-screen bg-gray-100">
@@ -55,8 +87,8 @@ export default function Authenticated({ auth, header, children }) {
                                     </Dropdown.Trigger>
 
                                     <Dropdown.Content>
-                                        <Dropdown.Link href={route('profile.edit')}>Profile</Dropdown.Link>
-                                        <Dropdown.Link href={route('logout')} method="post" as="button">
+                                        <Dropdown.Link href={getProfileRoute()}>Profile</Dropdown.Link>
+                                        <Dropdown.Link href={getLogoutRoute()} method="post" as="button">
                                             Log Out
                                         </Dropdown.Link>
                                     </Dropdown.Content>
@@ -106,8 +138,8 @@ export default function Authenticated({ auth, header, children }) {
                         </div>
 
                         <div className="mt-3 space-y-1">
-                            <ResponsiveNavLink href={route('profile.edit')}>Profile</ResponsiveNavLink>
-                            <ResponsiveNavLink method="post" href={route('logout')} as="button">
+                            <ResponsiveNavLink href={getProfileRoute()}>Profile</ResponsiveNavLink>
+                            <ResponsiveNavLink method="post" href={getLogoutRoute()} as="button">
                                 Log Out
                             </ResponsiveNavLink>
                         </div>
